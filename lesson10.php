@@ -1,4 +1,11 @@
 <?php
+require 'config.php';
+require 'header.php';
+
+
+
+
+
 //COMPLETE PHP FORM
 //Algorithm
 //1.create variables that will store received data
@@ -35,21 +42,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($last_name)) {
         $last_name_err = "Please fill in your last name";
     }
-    if (empty($email_err)) {
+    if (empty($email)) {
         $email_err = "Please fill in your email";
     }
-    if (empty($password1_err)) {
-        $password1_err = "Please fill in your Password";
+    if (empty($password1)) {
+        $password1_err = "Please fill in your password";
     }
-    if (empty($Password2_err)) {
+    if (empty($Password2)) {
         $password2_err = "Please fill in your confirm password";
-    }
+    }elseif (empty($gender)) {
+        $gender_err = "Please select your gender";
 //    check of password1 and password2 are matching
     if ($Password1 != $password2) {
         $password1_err = "Your password did not match";
+    }else{
+//        hashing passwords
+        $password1 =md5($password1);
+        //Inserting data into the table
+        $sql = "INSERT INTO `users`(`ID`, `username`, `firstname`, `lastname`, `email`, `password`, `gender`) VALUES (NULL,'$username','$first_name','$last_name','$email','$password','$gender')";
+        if (mysqli_query($connection,$sql)){
+            echo "Data inserted successfully <br>";
+        }else{
+            echo "Data not inserted".mysqli_error($connection);
+        }
     }
-    if (empty($gender)) {
-        $gender_err = "Please select your gender";
+
 //4.display the data: SOON store data in a database
 
     }
@@ -64,45 +81,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <label for="">Username</label><br>
         <input type="text" name="username"><br>
 <!--        show error if theres one-->
-        <span class="error" style="color: red"><?php echo $username_err?></span> <br>
+        <span class="error" style="color: red;"><?php echo $username_err;?></span> <br>
 
         <label for="">First Name</label><br>
         <input type="text" name="first_name"><br>
-        <span class="error" style="color: red"><?php echo $first_name_err?></span> <br>
+        <span class="error" style="color: red;"><?php echo $first_name_err;?></span> <br>
 
         <label for="">Last Name</label><br>
         <input type="text" name="last_name"><br>
-        <span class="error" style="color: red"><?php echo $last_name_err?></span> <br>
+        <span class="error" style="color: red;"><?php echo $last_name_err;?></span> <br>
 
         <label for="">Email</label><br>
         <input type="email" name="email"><br>
-        <span class="error" style="color: red"><?php echo $email_err?></span> <br>
+        <span class="error" style="color: red;"><?php echo $email_err;?></span> <br>
 
         <label for="">Password</label><br>
         <input type="password" name="pass1"><br>
-        <span class="error" style="color: red"><?php echo $password1_err?></span> <br>
+        <span class="error" style="color: red;"><?php echo $password1_err;?></span> <br>
 
 
         <label for="">Confirm password</label><br>
         <input type="password" name="pass2"><br>
-        <span class="error" style="color: red"><?php echo $password2_err?></span> <br>
+        <span class="error" style="color: red;"><?php echo $password2_err;?></span> <br>
 
         Gender:
         <input type="radio" name="gender" value="male">Male
         <input type="radio" name="gender" value="FEMALE">female
         <input type="radio" name="gender" value="male">Others
-        <span class="error" style="color: red"><?php echo $gender_err?></span> <br>
+        <span class="error" style=";color: red;"><?php echo $gender_err;?></span> <br>
 
         <button type="submit">Submit</button>
 
     </fieldset>
 </form>
+<table style="width: 100%">
+    <tr>
+        <td><?php echo $username.'<br>';?></td>
+        <td><?php echo $first_name.'<br>';?></td>
+        <td><?php echo $last_name.'<br>';?></td>
+        <td><?php echo $email.'<br>';?></td>
+        <td><?php echo $password1.'<br>';?></td>
+        <td><?php echo $password2.'<br>';?></td>
+        <td><?php echo $gender.'<br>';?></td>
+    </tr>
+</table>
 <?php
-echo $username."<br>";
-echo $first_name."<br>";
-echo $last_name."<br>";
-echo $email."<br>";
-echo $password1."<br>";
-echo $password2."<br>";
-echo $gender."<br>";
-?>
+require 'footer.php';
